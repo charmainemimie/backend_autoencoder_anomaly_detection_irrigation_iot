@@ -1,0 +1,55 @@
+# ==========================
+# Ignore Dataset Files
+# ==========================
+*.csv
+*.tsv
+data/
+datasets/
+*/data/
+*/datasets/
+
+# ==========================
+# Ignore Trained Models
+# ==========================
+*.pkl
+*.pt
+*.pth
+*.h5
+*.hdf5
+*.joblib
+*.sav
+*.onnx
+models/
+saved_models/
+checkpoints/
+*/models/
+*/saved_models/
+
+# ==========================
+# Python Cache / Build
+# ==========================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# ==========================
+# Environment & Virtualenv
+# ==========================
+.env
+.venv/
+venv/
+ENV/
+
+# ==========================
+# Jupyter Notebook
+# ==========================
+.ipynb_checkpoints/
+
+# ==========================
+# Logs
+# ==========================
+*.log
+logs/
+
+node_modules/

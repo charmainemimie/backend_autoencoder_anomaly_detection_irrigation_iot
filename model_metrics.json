@@ -1,0 +1,30 @@
+{
+  "dataset_info": {
+    "total_samples": 17000,
+    "training_samples": 13600,
+    "testing_samples": 3400
+  },
+  "feature_statistics": {
+    "moisture_mean": 51.58025235294117,
+    "moisture_std": 10.165896362253685,
+    "temperature_mean": 24.598971176470588,
+    "temperature_std": 5.169614430416373
+  },
+  "model_performance": {
+    "train_loss": 0.009385270066559315,
+    "train_mae": 0.07407693564891815,
+    "test_loss": 0.009485223330557346,
+    "test_mae": 0.07402530312538147
+  },
+  "classification_metrics": {
+    "accuracy": 0.9982352941176471,
+    "precision": 0.9659090909090909,
+    "recall": 1.0,
+    "f1_score": 0.9826589595375723
+  },
+  "anomaly_detection": {
+    "threshold": 0.035232075776987004,
+    "test_anomalies_count": 176,
+    "test_anomalies_percentage": 5.176470588235294
+  }
+}

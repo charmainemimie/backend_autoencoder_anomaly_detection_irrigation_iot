@@ -1,0 +1,40 @@
+{
+  "reconstruction_performance": {
+    "mse": 0.009405261039634672,
+    "rmse": 0.09698072509336415,
+    "mae": 0.07406662839735972
+  },
+  "anomaly_statistics": {
+    "total_samples": 17000,
+    "normal_samples": 16144,
+    "anomalies_detected": 856,
+    "anomaly_rate_percent": 5.035294117647059
+  },
+  "classification_metrics": {
+    "accuracy": 0.9996470588235294,
+    "precision": 0.9929906542056075,
+    "recall": 1.0,
+    "f1_score": 0.9964830011723329,
+    "sensitivity": 1.0,
+    "specificity": 0.9996284829721362,
+    "roc_auc": 1.0,
+    "pr_auc": 1.0
+  },
+  "confusion_matrix": {
+    "true_negatives": 16144,
+    "false_positives": 6,
+    "false_negatives": 0,
+    "true_positives": 850
+  },
+  "reconstruction_error_stats": {
+    "mean": 0.009405261039634672,
+    "std": 0.013217481577636284,
+    "min": 5.760124975775399e-06,
+    "max": 0.17311543472897095,
+    "median": 0.0042511029141255345,
+    "percentile_25": 0.0017323655488481414,
+    "percentile_75": 0.011342276611499906,
+    "percentile_95": 0.035232075776987004,
+    "percentile_99": 0.06516946895899374
+  }
+}
