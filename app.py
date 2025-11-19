@@ -30,8 +30,8 @@ attack_params = {'target': None, 'intensity': 0}
 
 # User credentials
 USERS = {
-    'admin': {
-        'password': 'admin123', 
+    'agricyber': {
+        'password': 'agricyber123', 
         'name': 'John Kamau', 
         'farm': 'East Africa - Nairobi East Farm',
         'region': 'East Africa'

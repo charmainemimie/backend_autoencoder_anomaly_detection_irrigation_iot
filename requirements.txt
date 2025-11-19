@@ -33,5 +33,5 @@ python-dotenv==1.0.0
 # pytest-flask==1.2.0
 
 # Optional: Production Server
-# gunicorn==21.2.0
+gunicorn==21.2.0
 # waitress==2.1.2
