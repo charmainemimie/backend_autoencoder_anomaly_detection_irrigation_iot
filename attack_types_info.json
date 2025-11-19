@@ -1,0 +1,52 @@
+{
+  "dataset_info": {
+    "total_samples": 2500,
+    "benign_samples": 2000,
+    "attack_samples": 500,
+    "focus": "Sensor Spoofing, Injection, and Manipulation Attacks"
+  },
+  "attack_types": {
+    "data_injection_low": {
+      "description": "Attacker injecting false LOW moisture readings to waste water",
+      "attack_vector": "Man-in-the-Middle (MITM) on sensor data",
+      "motivation": "Waste water resources, increase irrigation costs",
+      "count": 100
+    },
+    "data_injection_high": {
+      "description": "Attacker injecting false HIGH moisture to prevent irrigation",
+      "attack_vector": "Compromised IoT gateway, data injection",
+      "motivation": "Cause crop failure through drought",
+      "count": 80
+    },
+    "sensor_spoofing_replay": {
+      "description": "Replay attack - sending old sensor readings",
+      "attack_vector": "Replay previous sensor data packets",
+      "motivation": "Hide actual field conditions, prevent proper irrigation",
+      "count": 90
+    },
+    "man_in_the_middle_modify": {
+      "description": "MITM attack modifying sensor data in transit",
+      "attack_vector": "Intercept and modify packets between sensor and gateway",
+      "motivation": "Trigger excessive irrigation, sabotage",
+      "count": 80
+    },
+    "sensor_value_manipulation": {
+      "description": "Direct sensor tampering - physical manipulation",
+      "attack_vector": "Physical access to sensor, rewiring",
+      "motivation": "Sabotage, competitive advantage",
+      "count": 70
+    },
+    "protocol_exploitation": {
+      "description": "Exploiting communication protocol vulnerabilities",
+      "attack_vector": "Buffer overflow, command injection on IoT protocol",
+      "motivation": "System compromise, data theft",
+      "count": 40
+    },
+    "dos_sensor_jamming": {
+      "description": "Denial of Service - sensor readings stuck/frozen",
+      "attack_vector": "RF jamming, communication disruption",
+      "motivation": "Prevent monitoring, hide theft",
+      "count": 40
+    }
+  }
+}

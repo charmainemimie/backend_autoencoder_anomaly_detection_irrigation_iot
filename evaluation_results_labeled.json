@@ -1,0 +1,91 @@
+{
+  "test_set_info": {
+    "total_samples": 2500,
+    "normal_samples": 2000,
+    "anomalous_samples": 500,
+    "anomaly_types": {
+      "data_injection_low": 100,
+      "sensor_spoofing_replay": 90,
+      "man_in_the_middle_modify": 80,
+      "data_injection_high": 80,
+      "sensor_value_manipulation": 70,
+      "protocol_exploitation": 40,
+      "dos_sensor_jamming": 40
+    }
+  },
+  "overall_metrics": {
+    "accuracy": 0.8344,
+    "precision": 0.6242774566473989,
+    "recall": 0.432,
+    "f1_score": 0.5106382978723404,
+    "sensitivity_tpr": 0.432,
+    "specificity_tnr": 0.935,
+    "false_positive_rate": 0.065,
+    "false_negative_rate": 0.568,
+    "roc_auc": 0.8022460000000001,
+    "pr_auc": 0.6063314375858505
+  },
+  "confusion_matrix": {
+    "true_negatives": 1870,
+    "false_positives": 130,
+    "false_negatives": 284,
+    "true_positives": 216
+  },
+  "error_statistics": {
+    "normal_mean": 0.010073099617702806,
+    "normal_std": 0.014773573525008665,
+    "anomaly_mean": 0.047331606107190304,
+    "anomaly_std": 0.05284263609138944,
+    "separation_ratio": 4.698812471188922
+  },
+  "threshold_info": {
+    "current_threshold": 0.035232075776987004,
+    "normal_95th_percentile": 0.03963454745688849,
+    "anomalies_detected": 346,
+    "anomalies_missed": 284
+  },
+  "per_anomaly_type": {
+    "data_injection_high": {
+      "count": 80,
+      "detected": 53,
+      "detection_rate": 0.6625,
+      "avg_error": 0.08233699878880521
+    },
+    "data_injection_low": {
+      "count": 100,
+      "detected": 40,
+      "detection_rate": 0.4,
+      "avg_error": 0.03802561997289335
+    },
+    "dos_sensor_jamming": {
+      "count": 40,
+      "detected": 17,
+      "detection_rate": 0.425,
+      "avg_error": 0.04549845722689931
+    },
+    "man_in_the_middle_modify": {
+      "count": 80,
+      "detected": 43,
+      "detection_rate": 0.5375,
+      "avg_error": 0.05700386306100955
+    },
+    "protocol_exploitation": {
+      "count": 40,
+      "detected": 11,
+      "detection_rate": 0.275,
+      "avg_error": 0.029797286251531514
+    },
+    "sensor_spoofing_replay": {
+      "count": 90,
+      "detected": 17,
+      "detection_rate": 0.18888888888888888,
+      "avg_error": 0.026691538516710172
+    },
+    "sensor_value_manipulation": {
+      "count": 70,
+      "detected": 35,
+      "detection_rate": 0.5,
+      "avg_error": 0.04717005575256412
+    }
+  }
+}

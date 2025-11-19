@@ -67,29 +67,29 @@ def load_trained_model():
                     metrics = json.load(f)
                 
                 print("\n" + "="*60)
-                print("MODEL PERFORMANCE METRICS")
+                #print("MODEL PERFORMANCE METRICS")
                 print("="*60)
                 
-                print(f"\nDataset Information:")
-                for key, value in metrics.get('dataset_info', {}).items():
-                    print(f"  {key}: {value}")
+                #print(f"\nDataset Information:")
+                #for key, value in metrics.get('dataset_info', {}).items():
+                #    print(f"  {key}: {value}")
                 
-                print(f"\nFeature Statistics:")
-                for key, value in metrics.get('feature_statistics', {}).items():
-                    print(f"  {key}: {value:.2f}")
+                #print(f"\nFeature Statistics:")
+                #for key, value in metrics.get('feature_statistics', {}).items():
+                #    print(f"  {key}: {value:.2f}")
                 
-                print(f"\nModel Performance:")
-                for key, value in metrics.get('model_performance', {}).items():
-                    print(f"  {key}: {value:.6f}")
+                #print(f"\nModel Performance:")
+                #for key, value in metrics.get('model_performance', {}).items():
+                #    print(f"  {key}: {value:.6f}")
                 
-                print(f"\nAnomaly Detection:")
-                for key, value in metrics.get('anomaly_detection', {}).items():
-                    print(f"  {key}: {value}")
+                #print(f"\nAnomaly Detection:")
+                #for key, value in metrics.get('anomaly_detection', {}).items():
+                #    print(f"  {key}: {value}")
                 
                 # Set threshold from metrics
                 anomaly_threshold = metrics.get('anomaly_detection', {}).get('threshold', 0.05)
-                print(f"\n✓ Anomaly threshold set to: {anomaly_threshold:.6f}")
-                print("="*60 + "\n")
+                #print(f"\n✓ Anomaly threshold set to: {anomaly_threshold:.6f}")
+                #print("="*60 + "\n")
         else:
             print("\n⚠ WARNING: Model files not found!")
             print("Please run train_model.py first to train the model.")
