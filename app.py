@@ -221,4 +221,4 @@ if __name__ == '__main__':
     print("\n🚀 Starting Flask server on http://localhost:5000")
     print("="*60 + "\n")
     
-    app.run(debug=True, port=5000, threaded=True, use_reloader=False)
+    app.run(host='0.0.0.0',debug=True, port=5000, threaded=True, use_reloader=False)
