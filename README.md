@@ -13,6 +13,10 @@ _Protecting East African Smart Agriculture from Cyber Threats_
 
 </div>
 
+## 🎬 Demo Video
+
+[Watch the demo video](https://github.com/user-attachments/assets/0b7ab90a-eb44-4d61-81c5-95333e851ab0)
+
 ---
 
 ## 📋 Table of Contents
