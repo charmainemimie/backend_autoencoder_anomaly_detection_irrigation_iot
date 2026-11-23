@@ -19,7 +19,7 @@
 ```
 ┌──────────────────────────────────────────────────────────────┐
 │ STEP 1: Generate Training Data                               │
-│ python generate_kenya_dataset.py                             │
+│ python generate_data.py                                      │
 │ → soil_sensor_data.csv (17,000 NORMAL samples)               │
 └──────────────────────────────────────────────────────────────┘
                             ↓

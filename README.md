@@ -4,7 +4,7 @@
 
 **Autoencoder-Based Cybersecurity for IoT-Enabled Agricultural Irrigation Systems**
 
-[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://python.org)
+[![Python](https://img.shields.io/badge/Python-3.10-blue.svg)](https://python.org)
 [![TensorFlow](https://img.shields.io/badge/TensorFlow-2.15-orange.svg)](https://tensorflow.org)
 [![Flask](https://img.shields.io/badge/Flask-2.3.3-green.svg)](https://flask.palletsprojects.com)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -346,7 +346,7 @@ Actual Anomaly              284               216
 
 ### Prerequisites
 
-- Python 3.10+
+- Python 3.10 or 3.11 (TensorFlow 2.15 and numpy 1.25 don't support 3.12+)
 - pip package manager
 - Virtual environment (recommended)
 
@@ -354,8 +354,8 @@ Actual Anomaly              284               216
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/yourusername/agricyber-backend.git
-cd agricyber-backend
+git clone https://github.com/charmainemimie/backend_autoencoder_anomaly_detection_irrigation_iot.git
+cd backend_autoencoder_anomaly_detection_irrigation_iot
 
 # 2. Create and activate virtual environment
 python -m venv venv
@@ -386,7 +386,7 @@ gunicorn==21.2.0
 numpy==1.25.2
 pandas==2.1.4
 scikit-learn==1.2.2
-tensorflow==2.15.0
+tensorflow-cpu==2.15.0
 matplotlib==3.7.2
 scipy==1.11.2
 joblib==1.3.2
@@ -406,7 +406,8 @@ python generate_data.py
 
 # Step 2: Train the Autoencoder Model
 python train_model.py
-# Outputs: autoencoder_model.h5, scaler.pkl, model_metrics.json
+# Outputs: autoencoder_model.h5, autoencoder_weights.npz, scaler.pkl, model_metrics.json
+# (app.py loads autoencoder_weights.npz and runs inference with numpy, without TensorFlow)
 
 # Step 3: Generate Attack Test Dataset (optional, for evaluation)
 python generate_test_data_with_anomalies.py
@@ -525,25 +526,40 @@ THRESHOLD_MULTIPLIER = 1.0  # Use exact training threshold
 
 ### Render.com (Recommended)
 
-The project includes `render.yaml` for one-click deployment:
+Live instance: https://agricyber.onrender.com (for example `GET /api/readings`; there is no route at `/`).
+
+The project includes `render.yaml` for Blueprint deployment:
 
 ```yaml
 services:
   - type: web
     name: agricyber-backend
-    env: python
-    runtime: python-3.10.12
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:app
+    runtime: python
     plan: free
+    buildCommand: pip install -r requirements.txt && python generate_data.py && python train_model.py
+    startCommand: gunicorn app:app --workers 1 --threads 4 --timeout 120
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.12
+      - key: TF_CPP_MIN_LOG_LEVEL
+        value: "2"
 ```
+
+Notes:
+
+- **Python version** comes from `PYTHON_VERSION` or the `.python-version` file. Render ignores `runtime.txt`, and its default Python is too new for TensorFlow 2.15.
+- **The model is trained during the build**, because the dataset and model files are gitignored. This adds roughly 1–2 minutes to each build.
+- **The web process doesn't import TensorFlow.** It runs the exported weights in numpy (about 150 MB of RAM instead of more than 500 MB), so it fits on the free plan.
+- **Keep one worker.** Sensor readings and attack state live in process memory.
+- **Manual setup:** if the service wasn't created from `render.yaml`, set the same build command, start command and `PYTHON_VERSION` under the service's Settings.
+- Optionally set `DEMO_PASSWORD` to change the demo login password (default `agricyber123`).
 
 ### Heroku
 
 Use the included `Procfile`:
 
 ```
-web: gunicorn app:app
+web: gunicorn app:app --workers 1 --threads 4 --timeout 120
 ```
 
 ### Docker (Custom)
@@ -554,7 +570,9 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 COPY . .
-CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:5000"]
+# Train at build time: the dataset and model files are not in the repo
+RUN python generate_data.py && python train_model.py
+CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:5000", "--workers", "1", "--threads", "4"]
 ```
 
 ---
