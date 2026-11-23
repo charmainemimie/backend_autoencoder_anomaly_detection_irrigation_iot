@@ -1,8 +1,16 @@
 services:
   - type: web
     name: agricyber-backend
-    env: python
-    runtime: python-3.10.12
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:app
+    runtime: python
     plan: free
+    # Model files are gitignored, so generate the dataset and train the
+    # autoencoder during the build (takes a couple of minutes on CPU).
+    buildCommand: pip install -r requirements.txt && python generate_data.py && python train_model.py
+    # One worker: the sensor simulation and readings live in process memory,
+    # and a second TensorFlow worker would not fit in 512 MB.
+    startCommand: gunicorn app:app --workers 1 --threads 4 --timeout 120
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.12
+      - key: TF_CPP_MIN_LOG_LEVEL
+        value: "2"

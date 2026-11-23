@@ -5,7 +5,6 @@ import pandas as pd
 from datetime import datetime
 import threading
 import time
-from tensorflow import keras
 import pickle
 import os
 import json
@@ -31,12 +30,37 @@ attack_params = {'target': None, 'intensity': 0}
 # User credentials
 USERS = {
     'agricyber': {
-        'password': 'agricyber123', 
+        'password': os.environ.get('DEMO_PASSWORD', 'agricyber123'), 
         'name': 'John Kamau', 
         'farm': 'East Africa - Nairobi East Farm',
         'region': 'East Africa'
     }
 }
+
+class NumpyAutoencoder:
+    """Forward pass of the trained Dense autoencoder using numpy only.
+
+    Loads the weights exported by train_model.py, so the web process does not
+    need to import TensorFlow (which alone uses ~400 MB of RAM).
+    """
+
+    def __init__(self, path):
+        data = np.load(path)
+        self.activations = list(data['activations'])
+        n = len(self.activations)
+        self.weights = [(data[f'W{i}'], data[f'b{i}']) for i in range(n)]
+
+    def predict(self, x, verbose=0):
+        # verbose is accepted only to match the Keras predict() signature
+        out = np.asarray(x, dtype=np.float32)
+        for (W, b), act in zip(self.weights, self.activations):
+            out = out @ W + b
+            if act == 'relu':
+                out = np.maximum(out, 0)
+            elif act != 'linear':
+                raise ValueError(f"Unsupported activation: {act}")
+        return out
+
 
 # Model variables
 autoencoder = None
@@ -48,12 +72,12 @@ def load_trained_model():
     global autoencoder, scaler, anomaly_threshold
     
     try:
-        if os.path.exists('autoencoder_model.h5') and os.path.exists('scaler.pkl'):
+        if os.path.exists('autoencoder_weights.npz') and os.path.exists('scaler.pkl'):
             print("\n" + "="*60)
             print("LOADING TRAINED MODEL")
             print("="*60)
             
-            autoencoder = keras.models.load_model('autoencoder_model.h5')
+            autoencoder = NumpyAutoencoder('autoencoder_weights.npz')
             
             with open('scaler.pkl', 'rb') as f:
                 scaler = pickle.load(f)
@@ -206,19 +230,34 @@ def update_sensor_readings():
         
         time.sleep(config.UPDATE_INTERVAL)  # Update based on config
 
-if __name__ == '__main__':
+def start_background_services():
+    """Load the model and start the sensor thread exactly once.
+
+    Called at import time so it also runs under gunicorn, which imports
+    app:app and never executes the __main__ block.
+    """
+    global _services_started
+    if _services_started:
+        return
+    _services_started = True
+
     print("\n" + "="*60)
     print("SMART IRRIGATION ANOMALY DETECTION SYSTEM")
     print("="*60)
-    
-    # Load the trained model
+
+    # Load the trained model (produced by train_model.py during the build)
     load_trained_model()
-    
+
     # Start sensor update thread
     sensor_thread = threading.Thread(target=update_sensor_readings, daemon=True)
     sensor_thread.start()
-    
+
+
+_services_started = False
+start_background_services()
+
+if __name__ == '__main__':
     print("\n🚀 Starting Flask server on http://localhost:5000")
     print("="*60 + "\n")
-    
-    app.run(host='0.0.0.0',debug=True, port=5000, threaded=True, use_reloader=False)
+
+    app.run(host='0.0.0.0', debug=True, port=5000, threaded=True, use_reloader=False)
