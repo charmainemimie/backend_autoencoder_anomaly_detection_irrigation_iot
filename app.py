@@ -230,30 +230,46 @@ def update_sensor_readings():
         
         time.sleep(config.UPDATE_INTERVAL)  # Update based on config
 
+_services_lock = threading.Lock()
+_services_pid = None
+
+
 def start_background_services():
-    """Load the model and start the sensor thread exactly once.
+    """Load the model and start the sensor thread once per process.
 
-    Called at import time so it also runs under gunicorn, which imports
-    app:app and never executes the __main__ block.
+    Threads don't survive fork(). Render runs gunicorn with --preload, so this
+    module is imported in the gunicorn master and then forked into the worker:
+    a thread started at import time would only exist in the master. Tracking
+    the PID lets the worker start its own thread on its first request.
     """
-    global _services_started
-    if _services_started:
+    global _services_pid
+    if _services_pid == os.getpid():
         return
-    _services_started = True
+    with _services_lock:
+        if _services_pid == os.getpid():
+            return
+        _services_pid = os.getpid()
 
-    print("\n" + "="*60)
-    print("SMART IRRIGATION ANOMALY DETECTION SYSTEM")
-    print("="*60)
+        print("\n" + "="*60)
+        print("SMART IRRIGATION ANOMALY DETECTION SYSTEM")
+        print("="*60)
 
-    # Load the trained model (produced by train_model.py during the build)
-    load_trained_model()
+        # Load the trained model once; a forked worker inherits it from the master
+        if autoencoder is None:
+            load_trained_model()
 
-    # Start sensor update thread
-    sensor_thread = threading.Thread(target=update_sensor_readings, daemon=True)
-    sensor_thread.start()
+        # Start sensor update thread in this process
+        sensor_thread = threading.Thread(target=update_sensor_readings, daemon=True)
+        sensor_thread.start()
 
 
-_services_started = False
+@app.before_request
+def ensure_background_services():
+    # Cheap PID check on every request; starts the thread in a freshly forked worker
+    start_background_services()
+
+
+# Start immediately for `python app.py` and non-preload gunicorn
 start_background_services()
 
 if __name__ == '__main__':
