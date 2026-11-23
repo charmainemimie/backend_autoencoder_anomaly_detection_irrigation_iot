@@ -53,3 +53,6 @@ ENV/
 logs/
 
 node_modules/
+
+# Generated at build time by train_model.py
+*.npz

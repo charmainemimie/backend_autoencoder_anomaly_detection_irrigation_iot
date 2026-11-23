@@ -132,6 +132,18 @@ print("SAVING MODEL")
 print("="*50)
 
 autoencoder.save('autoencoder_model.h5')
+
+# Export the Dense layer weights so the web app can run inference with plain
+# numpy and never import TensorFlow (keeps it under Render's 512 MB limit).
+# Dropout layers are inactive at inference time, so only Dense layers matter.
+dense_layers = [l for m in (encoder, decoder) for l in m.layers if isinstance(l, layers.Dense)]
+np.savez(
+    'autoencoder_weights.npz',
+    **{f'W{i}': l.get_weights()[0] for i, l in enumerate(dense_layers)},
+    **{f'b{i}': l.get_weights()[1] for i, l in enumerate(dense_layers)},
+    activations=np.array([l.get_config()['activation'] for l in dense_layers]),
+)
+print("✓ Inference weights exported to autoencoder_weights.npz")
 with open('scaler.pkl', 'wb') as f:
     pickle.dump(scaler, f)
 
