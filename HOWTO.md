@@ -1,5 +1,5 @@
 # 1. Generate the dataset with flow rates
-python generate_kenya_dataset.py
+python generate_data.py
 
 # Expected output: 17,000 records with realistic flow rates
 # Drip: ~30% of irrigation events
